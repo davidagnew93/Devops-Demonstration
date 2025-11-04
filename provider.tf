@@ -10,7 +10,7 @@ terraform {
 
   #   backend "s3" {
   #     bucket         = "dev-three-tier-web-state"
-  #     key            = "devops-test/terraform.tfstate"
+  #     key            = "david/terraform.tfstate"
   #     region         = "eu-west-1"
   #     dynamodb_table = "dev-terraform-locks"
   #     encrypt        = true

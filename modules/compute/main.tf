@@ -65,7 +65,7 @@ resource "aws_autoscaling_group" "asg" {
 
   launch_template {
     id      = aws_launch_template.lt.id
-    version = "$$Latest"
+    version = "$Latest"
   }
 
   target_group_arns = [var.alb_target_group_arn]
@@ -86,6 +86,9 @@ resource "aws_autoscaling_group" "asg" {
       propagate_at_launch = true
     }
   }
+
+  # Ensure ASG waits for LT to be created
+  depends_on = [aws_launch_template.lt]
 }
 
 output "asg_name" {

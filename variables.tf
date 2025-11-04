@@ -38,6 +38,12 @@ variable "db_engine" {
   default = "mysql"
 }
 
+variable "db_name" {
+  type    = string
+  default = "scalablewebstack"
+}
+
+
 variable "db_engine_version" {
   type    = string
   default = "8.0"
@@ -74,7 +80,7 @@ variable "common_tags" {
   type = map(string)
   default = {
     Environment = "dev"
-    Owner       = "devops-test"
+    Owner       = "David"
     Project     = "scalable-web-stack"
   }
 }

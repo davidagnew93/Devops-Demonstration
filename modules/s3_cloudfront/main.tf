@@ -7,10 +7,10 @@ resource "aws_s3_bucket" "assets" {
   )
 }
 
-resource "aws_s3_bucket_acl" "assets_acl" {
-  bucket = aws_s3_bucket.assets.id
-  acl    = "private"
-}
+# resource "aws_s3_bucket_acl" "assets_acl" {
+#   bucket = aws_s3_bucket.assets.id
+#   acl    = "private"
+# }
 
 resource "aws_s3_bucket_public_access_block" "block" {
   bucket = aws_s3_bucket.assets.id
@@ -27,19 +27,28 @@ resource "aws_cloudfront_origin_access_identity" "oai" {
 resource "aws_cloudfront_distribution" "cdn" {
   origin {
     domain_name = aws_s3_bucket.assets.bucket_regional_domain_name
-    origin_id = "s3-${var.project}-assets"
+    origin_id   = "s3-${var.project}-assets"
+
     s3_origin_config {
       origin_access_identity = aws_cloudfront_origin_access_identity.oai.cloudfront_access_identity_path
     }
   }
 
-  enabled = true
+  enabled             = true
   default_root_object = "index.html"
+
   default_cache_behavior {
-    allowed_methods = ["GET","HEAD"]
-    cached_methods = ["GET","HEAD"]
+    allowed_methods  = ["GET", "HEAD"]
+    cached_methods   = ["GET", "HEAD"]
     target_origin_id = "s3-${var.project}-assets"
     viewer_protocol_policy = "allow-all"
+
+    forwarded_values {     
+      query_string = false
+      cookies {
+        forward = "none"
+      }
+    }
   }
 
   viewer_certificate {
@@ -47,7 +56,9 @@ resource "aws_cloudfront_distribution" "cdn" {
   }
 
   restrictions {
-    geo_restriction { restriction_type = "none" }
+    geo_restriction {
+      restriction_type = "none"
+    }
   }
 
   tags = var.common_tags
